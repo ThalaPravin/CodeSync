@@ -17,8 +17,8 @@
 | Frontend        | Backend       | Others                |
 |-----------------|---------------|------------------------|
 | React.js        | Node.js       | WebSockets (Socket.IO) |
-| Tailwind CSS    | Express.js    | MongoDB (Mongoose)     |
-| CodeMirror / Monaco Editor | JWT Auth | Redis (Optional - Socket Scaling) |
+                   | Express.js    | MongoDB (Mongoose)     |
+|                   | JWT Auth |) |
 | React Router    | REST API      | dotenv, ESLint, Prettier |
 
 
