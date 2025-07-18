@@ -14,7 +14,7 @@ app.use(
     cors({
       origin: CLIENT_URL,
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      credentials: true, // allow session cookies from browser to pass throught
+      credentials: true,cls
     })
 );
 
@@ -70,20 +70,18 @@ io.on("connection", socket => {
   const { id } = socket.client
   console.log(`User connected ${id}`)
 
-  // Check if room exists
+
   socket.on('room-id', msg => {
       let exists = rooms.includes(msg)
       socket.emit('room-check', exists)
 
   })
 
-  // If code changes, broadcast to sockets
   socket.on('code-change', msg => {
       socket.broadcast.to(socket.room).emit('code-update', msg)
 
   })
 
-  // Send initial data to last person who joined
   socket.on('user-join', msg => {
       let room = io.sockets.adapter.rooms.get(socket.room);
       let lastPerson = getLastValue(room);
@@ -91,7 +89,6 @@ io.on("connection", socket => {
       io.to(lastPerson).emit('accept-info', msg);
   })
 
-  // Add room to socket
   socket.on('join-room', msg => {
       console.log("JOINING " + msg.id)
       socket.room = msg.id
@@ -107,7 +104,6 @@ io.on("connection", socket => {
           var first = it.next();
           let user = first.value;
           console.log("first-->" + user);
-          // let user = Object.keys(room.sockets)[0]
           io.to(user).emit('request-info', "");
       }
       console.log("-----> "+ Object.values(msg));
@@ -123,12 +119,10 @@ io.on("connection", socket => {
   })
 
 
-  // If language changes, broadcast to sockets
   socket.on('language-change', msg => {
       io.sockets.in(socket.room).emit('language-update', msg)
   })
 
-  // If title changes, broadcast to sockets
   socket.on('title-change', msg => {
       io.sockets.in(socket.room).emit('title-update', msg)
   })
@@ -137,7 +131,6 @@ io.on("connection", socket => {
     io.to(socket.room).emit('receive-message', { sender: sender, text: message });
   });
 
-  // If connection is lost
   socket.on('disconnect', () => {
       console.log(`User ${id} disconnected`)
   })
@@ -158,7 +151,6 @@ io.on("connection", socket => {
     }
   })
 
-  // Check if there is no one in the room, remove the room if true
   socket.on('disconnecting', () => {
       try {
           let room = io.sockets.adapter.rooms.get(socket.room)
